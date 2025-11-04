@@ -1,0 +1,25 @@
+CREATE DATABASE student_management;
+
+USE student_management;
+
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_name VARCHAR(50),
+    duration VARCHAR(20)
+);
+
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    course_id INT,
+    balance DOUBLE,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    amount DOUBLE,
+    date DATETIME,
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);

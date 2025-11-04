@@ -1,0 +1,35 @@
+package com.example.sms;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class StudentDAO {
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    public void saveStudent(Student student) {
+        sessionFactory.getCurrentSession().save(student);
+    }
+
+    public Student getStudent(int id) {
+        return sessionFactory.getCurrentSession().get(Student.class, id);
+    }
+
+    public void updateStudent(Student student) {
+        sessionFactory.getCurrentSession().update(student);
+    }
+
+    public void deleteStudent(Student student) {
+        sessionFactory.getCurrentSession().delete(student);
+    }
+
+    public List<Student> getAllStudents() {
+        return sessionFactory.getCurrentSession().createQuery("from Student", Student.class).list();
+    }
+}

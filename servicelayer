@@ -1,0 +1,40 @@
+package com.example.sms;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class FeeService {
+
+    @Autowired
+    private StudentDAO studentDAO;
+
+    @Transactional
+    public void payFee(int studentId, double amount) {
+        Student student = studentDAO.getStudent(studentId);
+        if(student == null) throw new RuntimeException("Student not found");
+
+        if(student.getBalance() < amount) throw new RuntimeException("Insufficient balance");
+
+        student.setBalance(student.getBalance() - amount);
+        studentDAO.updateStudent(student);
+
+        // Payment record (optional)
+        Payment payment = new Payment(student, amount);
+        studentDAO.getSessionFactory().getCurrentSession().save(payment);
+
+        System.out.println("Fee payment successful for student: " + student.getName());
+    }
+
+    @Transactional
+    public void refundFee(int studentId, double amount) {
+        Student student = studentDAO.getStudent(studentId);
+        if(student == null) throw new RuntimeException("Student not found");
+
+        student.setBalance(student.getBalance() + amount);
+        studentDAO.updateStudent(student);
+
+        System.out.println("Fee refund successful for student: " + student.getName());
+    }
+}
